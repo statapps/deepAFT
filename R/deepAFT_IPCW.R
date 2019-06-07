@@ -1,9 +1,11 @@
-#### recursive KM for AFT
-rm(list = ls())
+### Approximate function
+set.seed(29)
+.appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
+
 library(survival)
 library(tensorflow)
 library(keras)
-source("deepAFT.R")
+#source("deepAFT.R")
 
 a = 1.5
 b = c(1.5, 0.8, 1.7, log(0.3),0.2, 1.2)
@@ -14,7 +16,7 @@ max.iter = 50
 
 alpha_lr = 0.01
 decay_rate = 0.005
-epochs.n = 5
+epochs.n = 100
 batch.n = 20
 
 #simulate the data
@@ -40,18 +42,18 @@ summary(time)
 summary(status)
 y = Surv(time, status)
 
-#standardize X
-#.stndx = function(a) {return((a - mean(a))/sd(a))}
-#x = apply(x, 2, .stndx)
+# fit km curve for censoring
+G_fit = survfit(Surv(time, 1-status)~1)
+G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
 
 ### Keras
 model = keras_model_sequential()
 
 ### define model layers
 model %>% layer_dense(units = 7, activation = 'selu', input_shape = c(p)) %>%
-  layer_dense(units = 11, activation = 'selu') %>%
-  # layer_dropout(rate = 0.1)%>%
-  layer_dense(units = 7, activation = 'selu') %>%
+  layer_dense(units = 11, activation = 'relu') %>%
+  layer_dropout(rate = 0.05)%>%
+  layer_dense(units = 7, activation = 'relu') %>%
   layer_dense(units = 1)
 
 ### Compile (Define loss and optimizer)
@@ -59,11 +61,20 @@ model %>% compile(loss = 'mse',
        optimizer = optimizer_adam(lr=alpha_lr, decay=decay_rate))
 #summary(model)
 
-object = deepAFT(y~x, model, epochs = epochs.n, batch_size = batch.n, 
-    validation_split = .1, verbose = 1, max.iter = max.iter, epsilon = 0.1)
+epochs.n = 100
+bach.n = 12
+validation_split = 0.1
+verbose = 1
 
-cat('censoring = ', (1-mean(status))*100, '%\n')
-plot(object, type = 'resid')
-plot(object)
+lgt = log(time)
+mean.ipt = mean(lgt)
+lgt = lgt-mean.ipt
+history = model%>%fit(x, lgt,
+  epochs = epochs.n, batch_size = batch.n, sample_weight = G,
+  validation_split = validation_split, verbose = verbose)
 
-#plot(log(c_data$time),c_data$mu)
+#linear predictors
+lp = (model%>%predict(x)+mean.ipt)
+pred_time = exp(lp)
+plot(pred_time, time)
+plot(log(time), log(pred_time))

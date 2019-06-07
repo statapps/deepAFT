@@ -1,7 +1,28 @@
 #### deep learning for AFT
 
-deepAFT = function(X, y, model, epochs = 30, batch_size = 32, 
-  validation_split = 0.2, verbose = 0, epsilon = 0.01, max.iter = 50) {
+deepAFT = function(x, ...) UseMethod("deepAFT")
+
+deepAFT.formula = function(formula, model, epochs = 30, batch_size = 32, 
+                    validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50, 
+                    data = list(...)) {
+  mf = model.frame(formula=formula, data=data)
+  
+  x = model.matrix(attr(mf, "terms"), data = mf)
+  y = model.response(mf)
+  
+  if (class(y) == "Surv") {
+    family = "surv";
+    st = sort(y[, 1], decreasing = TRUE, index.return = TRUE)
+    idx = st$ix
+    y = y[idx, ]
+    x = x[idx, ]
+  }
+  do.call(deepAFT, x, y)
+}
+  
+#deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32, 
+#  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
+deepAFT.default = function(x, y) {
   time = y[, 1]
   status = y[, 2]
   n = length(status)
@@ -10,7 +31,7 @@ deepAFT = function(X, y, model, epochs = 30, batch_size = 32,
   dat = data.frame(cbind(id = id, time = time, status = status))
   ep = 1
   dati = dat
-  ipt = imputeKM(dat)*ep
+  ipt = .imputeKM(dat)*ep
   ipt0 = ipt
   mean.ipt = mean(log(ipt))
   
@@ -34,7 +55,7 @@ deepAFT = function(X, y, model, epochs = 30, batch_size = 32,
     et = ifelse(et < max.t, et, max.t)
     dati = data.frame(cbind(id = id, time = et, status = dat$status))
     colnames(dati) = c("id", "time", "status")
-    ipt = imputeKM(dati)*ep
+    ipt = .imputeKM(dati)*ep
     ### restrict imputed time to be less than max.t
     ipt = ifelse(ipt < max.t, ipt, max.t)
     resid = (log(ipt) - lp)
@@ -94,7 +115,7 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
   return(ipt)
 }
 
-imputeKM = function(dat) {
+.imputeKM = function(dat) {
   sf = survfit(Surv(time, status)~1, data = dat)
   sv = sf$surv
   #sv[length(sv)] = 0
