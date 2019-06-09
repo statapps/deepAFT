@@ -10,7 +10,7 @@ b = c(1.5, 0.8, 1.7, log(0.3),0.2, 1.2)
 
 cen.time = 50
 n = 500
-max.iter = 50
+max.iter = 5
 
 alpha_lr = 0.01
 decay_rate = 0.005
@@ -43,15 +43,16 @@ y = Surv(time, status)
 #standardize X
 #.stndx = function(a) {return((a - mean(a))/sd(a))}
 #x = apply(x, 2, .stndx)
+x = array_reshape(x, c(n, p))
 
 ### Keras
 model = keras_model_sequential()
 
 ### define model layers
-model %>% layer_dense(units = 7, activation = 'selu', input_shape = c(p)) %>%
-  layer_dense(units = 11, activation = 'selu') %>%
+model %>% layer_dense(units = 7, activation = 'relu', input_shape = c(p)) %>%
+  layer_dense(units = 11, activation = 'relu') %>%
   # layer_dropout(rate = 0.1)%>%
-  layer_dense(units = 7, activation = 'selu') %>%
+  layer_dense(units = 7, activation = 'relu') %>%
   layer_dense(units = 1)
 
 ### Compile (Define loss and optimizer)
