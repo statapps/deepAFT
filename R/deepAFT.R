@@ -20,9 +20,8 @@ deepAFT.formula = function(formula, model, epochs = 30, batch_size = 32,
   do.call(deepAFT, x, y)
 }
   
-#deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32, 
-#  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
-deepAFT.default = function(x, y) {
+deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32, 
+  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
   time = y[, 1]
   status = y[, 2]
   n = length(status)
@@ -135,10 +134,6 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
 }
 
 ################ testing code, no use for now
-
-### replace function_fit with NN fit
-#my_fit = lm(lgt~x)
-
 ### print out intermediate results if requested
 # if(verbose > 0) {
 #   # prediciton using linear model
