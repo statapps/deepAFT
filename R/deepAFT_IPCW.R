@@ -12,11 +12,11 @@ b = c(1.5, 0.8, 1.7, log(0.3),0.2, 1.2)
 
 cen.time = 50
 n = 500
-max.iter = 50
+max.iter = 10
 
 alpha_lr = 0.01
 decay_rate = 0.005
-epochs.n = 100
+epochs.n = 10
 batch.n = 20
 
 #simulate the data

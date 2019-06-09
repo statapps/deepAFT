@@ -3,7 +3,7 @@ rm(list = ls())
 library(survival)
 library(tensorflow)
 library(keras)
-source("deepAFT.R")
+#source("deepAFT.R")
 
 a = 1.5
 b = c(1.5, 0.8, 1.7, log(0.3),0.2, 1.2)
@@ -60,11 +60,12 @@ model %>% compile(loss = 'mse',
        optimizer = optimizer_adam(lr=alpha_lr, decay=decay_rate))
 #summary(model)
 
-object = deepAFT(y~x, model, epochs = epochs.n, batch_size = batch.n, 
-    validation_split = .1, verbose = 1, max.iter = max.iter, epsilon = 0.1)
+epsilon = max(y[, 1])/100
+#fit = deepAFT(x, y, model, epochs = epochs.n, batch_size = batch.n, 
+#    validation_split = .1, verbose = 1, max.iter = max.iter, epsilon = epsilon)
 
 cat('censoring = ', (1-mean(status))*100, '%\n')
-plot(object, type = 'resid')
-plot(object)
+#plot(fit, type = 'resid')
+#plot(fit)
 
 #plot(log(c_data$time),c_data$mu)
