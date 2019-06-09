@@ -61,13 +61,12 @@ Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>}
 ##--	or do  help(data=index)  for the standard data sets.
 
 ## The function is currently defined as
-# fit = deepAFT(Surv(time, status) ~ x) 
+# fit = deepAFT(Surv(time, status) ~ x)
 # print(fit)
-#  }
+#  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{deepAFT}% use one of  RShowDoc("KEYWORDS")
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
-
 

@@ -31,9 +31,12 @@ deepAFT(x)
 }
 \references{
 %% ~put references to the literature/web site here ~
+Buckley, J. and James, I. (1979). Linear regression with cencored data. Biometrika, 66, page 429-436.
+Norman, P. and Chen, B. E. (2019). DeepAFT: A nonparametric accelerated failure time model with artifical neural network. Manuscript to be submitted. 
 }
 \author{
 %%  ~~who you are~~
+Chen, B. E. and Norman P.
 }
 \note{
 %%  ~~further notes~~
