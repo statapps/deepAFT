@@ -1,6 +1,5 @@
 ### Approximate function
 set.seed(29)
-.appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
 
 library(survival)
 library(tensorflow)
@@ -42,10 +41,6 @@ summary(time)
 summary(status)
 y = Surv(time, status)
 
-# fit km curve for censoring
-G_fit = survfit(Surv(time, 1-status)~1)
-G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
-
 ### Keras
 model = keras_model_sequential()
 
@@ -66,15 +61,35 @@ bach.n = 12
 validation_split = 0.1
 verbose = 1
 
-lgt = log(time)
-mean.ipt = mean(lgt)
-lgt = lgt-mean.ipt
-history = model%>%fit(x, lgt,
-  epochs = epochs.n, batch_size = batch.n, sample_weight = G,
-  validation_split = validation_split, verbose = verbose)
+deepAFT.ipcw = function(x, y, model, epochs = 30, batch_size = 32, 
+  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
 
-#linear predictors
-lp = (model%>%predict(x)+mean.ipt)
-pred_time = exp(lp)
-plot(pred_time, time)
-plot(log(time), log(pred_time))
+  .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
+  time = y[, 1]
+  status = y[, 2]
+  n = length(status)
+  max.t = max(time)
+
+  # fit km curve for censoring
+  G_fit = survfit(Surv(time, 1-status)~1)
+  G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
+
+  lgt = log(time)
+  mean.ipt = mean(lgt)
+  lgt = lgt-mean.ipt
+
+  history = model%>%fit(x, lgt,
+    epochs = epochs.n, batch_size = batch.n, sample_weight = G,
+    validation_split = validation_split, verbose = verbose)
+
+  #linear predictors
+  lp = (model%>%predict(x)+mean.ipt)
+  pred_time = exp(lp)
+
+}
+
+class(x) = "ipcw"
+fit =  deepAFT(x, y)
+print(fit)
+#plot(pred_time, time)
+#plot(log(time), log(pred_time))
