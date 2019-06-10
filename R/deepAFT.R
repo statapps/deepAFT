@@ -116,6 +116,11 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
   }
 }
 
+print.deepAFT = function(x, ...) {
+  sfit = survfit(x)
+  print(sfit)
+}
+
 #### impute KM for AFT
 ### impute censoring time
 ## st is a n x 2 matrix, with st[ ,1] as time and st[, 2] as survival function

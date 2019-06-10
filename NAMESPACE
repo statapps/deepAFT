@@ -4,7 +4,8 @@ import(keras)
 import(survival)
 import(tensorflow)
 
-importFrom("stats", "approx")
+importFrom("stats", "approx", "predict")
+#importFrom("keras", "predict")
 
 S3method(deepAFT, default)
 S3method(deepAFT,  formula)

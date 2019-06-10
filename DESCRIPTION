@@ -2,11 +2,13 @@ Package: deepAFT
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
+Date: 2019-06-09
 Depends: R (>= 3.2.0), keras, survival, tensorflow
+Imports: methods
 Author: Bingshu E. Chen and Patrick Norman
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Contains tools to fit accelerated failure time survival data using deep learning models. Evaluate the treatment effect, biomarker effect for survival time.
 Encoding: UTF-8
 LazyData: true
+License: GPL (>=2)
+LazyLoad: yes

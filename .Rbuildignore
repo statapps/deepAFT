@@ -4,5 +4,7 @@
 ^cran-comments\.md$ # Comments for CRAN submission
 ^NEWS\.md$          # A news file written in Markdown
 ^\.travis\.yml$     # Used for continuous integration testing with travis
-^\.git\*$    # git files
-^\.gitignore$ #
+^\.git\*$           # git files
+^\.gitignore$       #
+readme.md$          # readme file
+deepAFT.Rproj$      #

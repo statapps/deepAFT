@@ -1,8 +1,8 @@
 \name{deepAFT}
 \alias{deepAFT}
-\alias{bhm.default}
-\alias{bhm.formula}
-\alias{bhmFit}
+\alias{deepAFT.default}
+\alias{deepAFT.formula}
+\alias{deepAFT.ipcw}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Deep learning for accelerated failure time data
@@ -51,21 +51,19 @@ An object of class "deepAFT" is returned.
 \references{
 %% ~put references to the literature/web site here ~
 Buckley, J. and James, I. (1979). Linear regression with cencored data. Biometrika, 66, page 429-436.
+
 Norman, P. and Chen, B. E. (2019). DeepAFAT: A nonparametric accelerated failure time model with artifical neural network. Manuscript to be submitted. 
+
 Chollet, F. and Allaire J. J. (2017). Deep learning with R. Manning.
 }
-\author{
-%%  ~~who you are~~
-Chen, B. E. and Norman P.
+\author{Chen, B. E. and Norman P.
 }
-\note{
-%%  ~~further notes~~
-}
+\note{For right censored survival time only}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{survreg}}, \code{\link{ibs.deepAFT}}
 }
 \examples{
 ## Example for deep learning model

@@ -41,11 +41,15 @@ A stable version of View the "deepAFT" package is also available from the Compre
 
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>}
 \references{
- Put references to the literature/web site here ~
+Buckley, J. and James, I. (1979). Linear regression with cencored data. Biometrika, 66, page 429-436.
+
+Norman, P. and Chen, B. E. (2019). DeepAFAT: A nonparametric accelerated failure time model with artifical neural network. Manuscript to be submitted. 
+
+Chollet, F. and Allaire J. J. (2017). Deep learning with R. Manning.
 }
 
 \note{
-%%  ~~further notes~~
+deep AFT works only for right censored data. Methods for other types of censoring will be developed soon.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

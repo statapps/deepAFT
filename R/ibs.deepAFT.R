@@ -1,7 +1,7 @@
 ibs = function(x, ...) UseMethod("ibs")
 
 ibs.default <- function(x, ...){
-  print("Input must be either coxph or deepAFT object.")
+  print("Input must be a deepAFT object.")
 }
 
 ibs.deepAFT= function(object, newdata=NULL, newy = NULL, ...) {
