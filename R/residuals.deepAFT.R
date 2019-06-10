@@ -1,5 +1,5 @@
 ### baseline cumulative hazard function and martingale residuals for deepAFT
-survfit.deepAFT = function(object, se.fit=TRUE, conf.int = .95) {
+survfit.deepAFT = function(object, se.fit=TRUE, conf.int = .95, ...) {
   #baseline survival function S_T0(t), with all covariates value = 0
   #where T0 = T/exp(mu), or log(T0) = log(T) - mu
   y0 = object$y
@@ -9,7 +9,7 @@ survfit.deepAFT = function(object, se.fit=TRUE, conf.int = .95) {
 }
 
 ### Residuals of deepAFT
-residuals.deepAFT = function(object, type=c("martingale", "deviance")) {
+residuals.deepAFT = function(object, type=c("martingale", "deviance"), ...) {
   type = match.arg(type)
   sfit = survfit(object, se.fit = FALSE)
   rr = sfit$residuals

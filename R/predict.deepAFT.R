@@ -1,7 +1,7 @@
 ### Approximate function
 .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
 
-predict.deepAFT = function(object, newdata, newy = NULL) {
+predict.deepAFT = function(object, newdata, newy = NULL, ...) {
   sfit = object$sfit
   lp   = object$linear.predictors
   risk = object$risk

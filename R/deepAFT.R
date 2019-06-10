@@ -97,6 +97,7 @@ deepAFT.control = function(epochs = 30, batch_size = 32,
   
   list(epochs = epochs, batch_size = batch_size, validation_split = validation_split, verbose = verbose, epsilon = epsilon, iter.max = iter.max)
 }
+
 plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...) {
   type = match.arg(type)
   time = x$y[, 1]
