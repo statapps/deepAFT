@@ -7,11 +7,11 @@
 Deep learning for accelerated failure time data
 }
 \description{
-A deep learning package for survival analysis using accelerated failure time (AFT) model.
+A deep learning package for survival analysis using accelerated failure time (AFT) models.
 }
 
 \details{
-"deepAFT" is a R package for Biomarker Threshold Models.
+"deepAFT" is a R package for deep learning accerelated failure time Models.
 Please use the following steps to install the most recent version of 'deepAFT' package:
 
 1. First, you need to install the 'devtools' package. 
@@ -28,10 +28,10 @@ Please use the following steps to install the most recent version of 'deepAFT' p
   install_github("statapps/deepAFT")
 
 
-"deepAFT" uses different statistical methods to identify cut-point (thershold parameter) for the 
-biomarker in either generalized linear models or Cox proportional hazards model.
+"deepAFT" uses deep learning methods to fir an accerelated failure time model for survival data with high dimensional  
+biomarker variables or other covariates.
 
-A stable version of View the "deepAFT" package is also available from the Comprehensive R Archive Network 
+In the future, a stable version of the "deepAFT" package will be also available from the Comprehensive R Archive Network 
 (https://CRAN.R-project.org/package=deepAFT) and can be installed using R command 
 
   install.packages("deepAFT")
@@ -49,7 +49,7 @@ Chollet, F. and Allaire J. J. (2017). Deep learning with R. Manning.
 }
 
 \note{
-deep AFT works only for right censored data. Methods for other types of censoring will be developed soon.
+For now, deepAFT works only for right censored data. Methods for other types of censoring will be developed soon.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

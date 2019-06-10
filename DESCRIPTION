@@ -6,7 +6,7 @@ Date: 2019-06-09
 Depends: R (>= 3.2.0), keras, survival, tensorflow
 Imports: methods
 Author: Bingshu E. Chen and Patrick Norman
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: The package maintainer Bingshu E. Chen  <bingshu.chen@queensu.ca>
 Description: Contains tools to fit accelerated failure time survival data using deep learning models. Evaluate the treatment effect, biomarker effect for survival time.
 Encoding: UTF-8
 LazyData: true

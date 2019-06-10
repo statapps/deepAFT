@@ -4,7 +4,10 @@ import(keras)
 import(survival)
 import(tensorflow)
 
-importFrom("stats", "approx", "predict")
+importFrom("graphics", "abline", "plot", "title")
+importFrom("stats", "approx", "model.frame", "model.matrix", "model.response", 
+           "predict")
+
 #importFrom("keras", "predict")
 
 S3method(deepAFT, default)
@@ -14,6 +17,6 @@ S3method(ibs, deepAFT)
 S3method(plot, deepAFT)
 S3method(predict, deepAFT)
 S3method(print, deepAFT)
-S3method(residules, deepAFT)
+S3method(residuales, deepAFT)
 S3method(survfit, deepAFT)
 

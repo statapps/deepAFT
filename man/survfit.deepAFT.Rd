@@ -1,4 +1,4 @@
-\name{survfit.deepAFT}
+\name{survfit}
 \alias{survfit.deepAFT}
 \title{
 Create survival curves from a deepAFT estimate. 
@@ -8,13 +8,13 @@ Computes the predicted survival function of a previously fitted (deepAFT) model.
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{survfit}{deepAFT}(object, se.fit=TRUE, conf.int=.95, ...)
+\method{survfit}{deepAFT}(object, se.fit=TRUE, conf.int=.95)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{The results of a (deepAFT) fit.}
-  \item{se.fit}{A logical value indicating whether standard errors shall be computed. Default is TRUE.}
-  \item{conf.int}{The level for a two-sided confidence interval on the survival curve. Default is 0.95.}
+  \item{object}{the results of a (deepAFT) fit.}
+  \item{se.fit}{a logical value indicating whether standard errors shall be computed. Default is TRUE}
+  \item{conf.int}{the level for a two-sided confidence interval on the survival curve. Default is 0.95}
 }
 \details{
   survfit.deepAFT is called to compuate baseline survival function S_T0(t) from the deepAFT model \code{\link{deepAFT}}, where T0 = T/exp(mu), or log(T) = log(T) - mu.
@@ -39,7 +39,7 @@ Confidence interval is based on log-transformation of survival function.
 \author{Bingshu E. Chen}
 \seealso{
  The default method for survfit \code{\link{survfit}},
-#\code{\link{survfit.deepAFT}}
+\code{\link{predict.deepAFT}}
 }
 \examples{
 #
