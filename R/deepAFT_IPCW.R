@@ -1,5 +1,6 @@
 ### Approximate function
 set.seed(29)
+deepAFT = function(x, ...) UseMethod("deepAFT")
 
 library(survival)
 library(tensorflow)
@@ -62,7 +63,7 @@ validation_split = 0.1
 verbose = 1
 
 deepAFT.ipcw = function(x, y, model, epochs = 30, batch_size = 32, 
-  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
+  validation_split = 0.1, verbose = 1) {
 
   .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
   time = y[, 1]
@@ -85,11 +86,15 @@ deepAFT.ipcw = function(x, y, model, epochs = 30, batch_size = 32,
   #linear predictors
   lp = (model%>%predict(x)+mean.ipt)
   pred_time = exp(lp)
-
+  ### create outputs
+  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
+    linear.predictors = lp, risk = exp(-lp), method = "ipcw")
+  class(object) = 'deepAFT'
+  return(object)
 }
 
 class(x) = "ipcw"
-fit =  deepAFT(x, y)
+fit =  deepAFT(x, y, model)
 print(fit)
 #plot(pred_time, time)
 #plot(log(time), log(pred_time))
