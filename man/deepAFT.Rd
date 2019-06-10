@@ -29,12 +29,12 @@ deepAFT(x, y, model, epochs = 30, batch_size = 32,
   \item{model}{Keras model, see below for details.}
   \item{control}{a list of control values, in the format produced by
           ‘deepAFT.control’. The default value is ‘deepAFT.control()'}
-  \item{epochs}{}
-  \item{batch_size}{}
-  \item{validation_split}{}
-  \item{verbose}{}
-  \item{epsilon}{}
-  \item{max.iter}{}
+%%  \item{epochs}{}
+%%  \item{batch_size}{}
+%%  \item{validation_split}{}
+%%  \item{verbose}{}
+%%  \item{epsilon}{}
+%%  \item{max.iter}{}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -56,7 +56,8 @@ Norman, P. and Chen, B. E. (2019). DeepAFAT: A nonparametric accelerated failure
 
 Chollet, F. and Allaire J. J. (2017). Deep learning with R. Manning.
 }
-\author{Chen, B. E. and Norman P.
+\author{
+Chen, B. E. and Norman P.
 }
 \note{For right censored survival time only}
 

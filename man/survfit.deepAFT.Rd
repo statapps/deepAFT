@@ -8,7 +8,7 @@ Computes the predicted survival function of a previously fitted (deepAFT) model.
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{survfit}{deepAFT}(object, se.fit=TRUE, conf.int=.95)
+\method{survfit}{deepAFT}(object, se.fit=TRUE, conf.int=.95, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -1,5 +1,4 @@
 #### deep learning for AFT
-
 deepAFT = function(x, ...) UseMethod("deepAFT")
 
 deepAFT.formula = function(formula, model, data, control = list(...), 
@@ -25,15 +24,19 @@ deepAFT.formula = function(formula, model, data, control = list(...),
 
   class(x) = switch(method, BuckleyJames="default", ipcw="ipcw", transform="transform")
 
-  if (missing(control)) control = survreg.control(...)
-    else control =  do.call("survreg.control", control)
+  if (missing(control)) control = deepAFT.control(...)
+    else control =  do.call("deepAFT.control", control)
 
-  fit = do.call(deepAFT, x, y, model, control, ...)
+  fit = do.call("deepAFT", x, y, model, control, ...)
   return(fit)
 }
-  
-deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32, 
-  validation_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
+
+deepAFT.default = function(x, y, model, control) {
+  epochs = control$epochs
+  batch.n = control$batch.n
+  v_split = control$v_split
+  verbose = control$verbose
+  max.iter = control$max.iter
   time = y[, 1]
   status = y[, 2]
   n = length(status)
@@ -53,7 +56,7 @@ deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32,
     
     history = model%>%fit(x, lgt,
       epochs = epochs.n, batch_size = batch.n,
-      validation_split = validation_split, verbose = verbose)
+      validation_split = v_split, verbose = verbose)
 
     ep0 = ep
     #linear predictors
@@ -92,10 +95,45 @@ deepAFT.default = function(x, y, model, epochs = 30, batch_size = 32,
   return(object)
 }
 
-deepAFT.control = function(epochs = 30, batch_size = 32,
-  validation_split = 0.1, verbose = 0, epsilon = 0.01, iter.max = 50) {
+deepAFT.ipcw = function(x, y, model, control){
+## epochs = 30, batch_size = 32, validation_split = 0.1, verbose = 1) {
+  epochs = control$epochs
+  batch.n = control$batch.n
+  v_split = control$v_split
+  verbose = control$verbose
   
-  list(epochs = epochs, batch_size = batch_size, validation_split = validation_split, verbose = verbose, epsilon = epsilon, iter.max = iter.max)
+  time = y[, 1]
+  status = y[, 2]
+  n = length(status)
+  max.t = max(time)
+  
+  # fit km curve for censoring
+  G_fit = survfit(Surv(time, 1-status)~1)
+  G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
+  
+  lgt = log(time)
+  mean.ipt = mean(lgt)
+  lgt = lgt-mean.ipt
+  
+  history = model%>%fit(x, lgt,
+                        epochs = epochs.n, batch_size = batch.n, sample_weight = G,
+                        validation_split = v_split, verbose = verbose)
+  
+  #linear predictors
+  lp = (model%>%predict(x)+mean.ipt)
+  pred_time = exp(lp)
+  ### create outputs
+  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
+                linear.predictors = lp, means = apply(x, 2, mean),
+                risk = exp(-lp), method = "ipcw")
+  class(object) = 'deepAFT'
+  return(object)
+}
+
+deepAFT.control = function(epochs = 30, batch.n = 32,
+  v_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
+  
+  list(epochs = epochs, batch.n = batch.n, v_split = v_split, verbose = verbose, epsilon = epsilon, max.iter = max.iter)
 }
 
 plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...) {
@@ -155,36 +193,4 @@ print.deepAFT = function(x, ...) {
     else ipt[i] = c.max
   }
   return(ipt)
-}
-
-deepAFT.ipcw = function(x, y, model, epochs = 30, batch_size = 32, 
-  validation_split = 0.1, verbose = 1) {
-
-  .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
-  time = y[, 1]
-  status = y[, 2]
-  n = length(status)
-  max.t = max(time)
-
-  # fit km curve for censoring
-  G_fit = survfit(Surv(time, 1-status)~1)
-  G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
-
-  lgt = log(time)
-  mean.ipt = mean(lgt)
-  lgt = lgt-mean.ipt
-
-  history = model%>%fit(x, lgt,
-    epochs = epochs.n, batch_size = batch.n, sample_weight = G,
-    validation_split = validation_split, verbose = verbose)
-
-  #linear predictors
-  lp = (model%>%predict(x)+mean.ipt)
-  pred_time = exp(lp)
-  ### create outputs
-  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-    linear.predictors = lp, means = apply(x, 2, mean),
-    risk = exp(-lp), method = "ipcw")
-  class(object) = 'deepAFT'
-  return(object)
 }

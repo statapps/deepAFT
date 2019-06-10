@@ -9,7 +9,7 @@ Compute predicted values for a deepAFT object
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{predict}{deepAFT}(object, newdata, newy=NULL)
+\method{predict}{deepAFT}(object, newdata, newy=NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
