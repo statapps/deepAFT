@@ -24,10 +24,10 @@ deepAFT.formula = function(formula, model, data, control = list(...),
 
   class(x) = switch(method, BuckleyJames="default", ipcw="ipcw", transform="transform")
 
-  if (missing(control)) control = deepAFT.control(...)
-    else control =  do.call("deepAFT.control", control)
+  if (missing(control)) control = deepAFTcontrol(...)
+    else control =  do.call("deepAFTcontrol", control)
 
-  fit = do.call("deepAFT", x, y, model, control, ...)
+  fit = do.call("deepAFT", x, y, model, control)
   return(fit)
 }
 
@@ -36,7 +36,8 @@ deepAFT.default = function(x, y, model, control) {
   batch.n = control$batch.n
   v_split = control$v_split
   verbose = control$verbose
-  max.iter = control$max.iter
+  max.iter= control$max.iter
+  epsilon = control$epsilon
   time = y[, 1]
   status = y[, 2]
   n = length(status)
@@ -54,8 +55,7 @@ deepAFT.default = function(x, y, model, control) {
     ###lgy = log(T), with T = imputed time (ipt)
     lgt = log(ipt) - mean.ipt
     
-    history = model%>%fit(x, lgt,
-      epochs = epochs.n, batch_size = batch.n,
+    history = model%>%fit(x, lgt, epochs = epochs, batch_size = batch.n,
       validation_split = v_split, verbose = verbose)
 
     ep0 = ep
@@ -104,19 +104,20 @@ deepAFT.ipcw = function(x, y, model, control){
   
   time = y[, 1]
   status = y[, 2]
-  n = length(status)
-  max.t = max(time)
+  #n = length(status)
+  #max.t = max(time)
   
   # fit km curve for censoring
   G_fit = survfit(Surv(time, 1-status)~1)
-  G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-10)
+  G = status/(.appxf(G_fit$surv, x=G_fit$time, xout = time) + 1e-5)
   
+  #print(G)
   lgt = log(time)
   mean.ipt = mean(lgt)
   lgt = lgt-mean.ipt
   
   history = model%>%fit(x, lgt,
-                        epochs = epochs.n, batch_size = batch.n, sample_weight = G,
+                        epochs = epochs, batch_size = batch.n, sample_weight = G,
                         validation_split = v_split, verbose = verbose)
   
   #linear predictors
@@ -130,7 +131,7 @@ deepAFT.ipcw = function(x, y, model, control){
   return(object)
 }
 
-deepAFT.control = function(epochs = 30, batch.n = 32,
+deepAFTcontrol = function(epochs = 30, batch.n = 32,
   v_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
   
   list(epochs = epochs, batch.n = batch.n, v_split = v_split, verbose = verbose, epsilon = epsilon, max.iter = max.iter)
