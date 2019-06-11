@@ -8,13 +8,13 @@ Calculates martingle, deviance or Cox-Snell residuals for a previously fitted (d
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{residuals}{deepAFT}(object, type = c("martingle", "deviance", "CoxSnell"), ...)
+\method{residuals}{deepAFT}(object, type = c("martingale", "deviance", "CoxSnell"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{the results of a (deepAFT) fit.}
   \item{type}{character string indicating the type of residual desired. Possible values are "martingale", "deviance". Only enough of the string to determine a unique match is required.}
-  \item{dots}{other unused arguments.}
+  \item{\dots}{other unused arguments.}
 }
 \details{
   residuals.deepAFT is called to compuate baseline survival function S_T0(t) from the deepAFT model \code{\link{deepAFT}}, where T0 = T/exp(mu), or log(T) = log(T) - mu.

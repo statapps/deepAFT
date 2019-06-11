@@ -22,12 +22,14 @@ deepAFT.formula = function(formula, model, data, control = list(...),
   if (type == "mright" || type == "mcounting") 
     stop("multi-state survival is not supported")
 
-  class(x) = switch(method, BuckleyJames="default", ipcw="ipcw", transform="transform")
+  #class(x) = switch(method, BuckleyJames="default", ipcw="ipcw", transform="transform")
 
   if (missing(control)) control = deepAFTcontrol(...)
     else control =  do.call("deepAFTcontrol", control)
+  #fit = do.call("deepAFT", x, y, model, control)
 
-  fit = do.call("deepAFT", x, y, model, control)
+  fit = switch(method, BuckleyJames=deepAFT.default(x, y, model, control), 
+                       ipcw = deepAFT.ipcw(x, y, model, control))
   return(fit)
 }
 
@@ -83,13 +85,13 @@ deepAFT.default = function(x, y, model, control) {
       break
     }
   }
-  if(!convergence) warning("Maximum iterations reached before converge!") 
-  else cat('Algorithm converges after ', k, 'iterations!')
+  if(!convergence) warning("Maximum iterations reached before converge!\n") 
+  else cat('Algorithm converges after ', k, 'iterations!\n')
   
   ### create outputs
   object = list(X = x, y = Surv(time, status), model = model, mean.ipt = mean.ipt, 
-    linear.predictors = lp, means = apply(x, 2, mean), 
-                risk = exp(-lp), sfit = survfit(Surv(time, status)~1), residuals = resid, 
+    mu = lp, means = apply(x, 2, mean), 
+    risk = exp(-lp), sfit = survfit(Surv(time, status)~1), residuals = resid, 
                 iterations = k, method = "Buckley-James")
   class(object) = 'deepAFT'
   return(object)
@@ -125,7 +127,7 @@ deepAFT.ipcw = function(x, y, model, control){
   pred_time = exp(lp)
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-                linear.predictors = lp, means = apply(x, 2, mean),
+                mu = lp, means = apply(x, 2, mean),
                 risk = exp(-lp), method = "ipcw")
   class(object) = 'deepAFT'
   return(object)

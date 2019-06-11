@@ -5,6 +5,7 @@ import(survival)
 import(tensorflow)
 
 importFrom("graphics", "abline", "plot", "title")
+importFrom("methods", "is")
 importFrom("stats", "approx", "model.frame", "model.matrix", "model.response", 
            "predict")
 
@@ -13,10 +14,9 @@ importFrom("stats", "approx", "model.frame", "model.matrix", "model.response",
 S3method(deepAFT, default)
 S3method(deepAFT,  formula)
 
-S3method(ibs, deepAFT)
 S3method(plot, deepAFT)
 S3method(predict, deepAFT)
 S3method(print, deepAFT)
-S3method(residuales, deepAFT)
+S3method(residuals, deepAFT)
 S3method(survfit, deepAFT)
 

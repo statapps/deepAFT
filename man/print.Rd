@@ -1,18 +1,14 @@
 \name{print}
 \alias{print.deepAFT}
-\alias{summary.deepAFT}
-\alias{print.summary.deepAFT}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-print a fitted object or a summary of fitted object
+print a summary of fitted deepAFT object
 }
 \description{
-print and summary are used to provide a short summary of outputs from "deepAFT".
+print is used to provide a short summary of outputs from "deepAFT".
 }
 \usage{
 \method{print}{deepAFT}(x, ...)
-\method{print}{summary.deepAFT}(x, ...)
-\method{summary}{deepAFT}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -2,8 +2,8 @@
 .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
 
 predict.deepAFT = function(object, newdata, newy = NULL, ...) {
-  sfit = object$sfit
-  lp   = object$linear.predictors
+  sfit = survfit(object)
+  lp   = object$mu
   risk = object$risk
   if(missing(newdata)) {
     X = object$X
