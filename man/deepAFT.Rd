@@ -24,6 +24,16 @@ deepAFT(x, ...)
 \method{deepAFT}{default}(x, y, model, control, ...)
 
 \method{deepAFT}{ipcw}(x, y, model, control, ...)
+# use:
+#   deepAFT.ipcw(x, y, model, control)
+# or
+#   class(x) = "ipcw"
+#   deepAFT(x, y, model, control)
+# 
+\method{deepAFT}{trans}(x, y, model, control, ...)
+# use:
+#   class(x) = "transform"
+#   deepAFT(x, y, model, control)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

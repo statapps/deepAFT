@@ -91,9 +91,7 @@ deepAFT.default = function(x, y, model, control, ...) {
   
   ### create outputs
   object = list(X = x, y = Surv(time, status), model = model, mean.ipt = mean.ipt, 
-    mu = lp, means = apply(x, 2, mean), 
-    risk = exp(-lp), sfit = survfit(Surv(time, status)~1), residuals = resid, 
-                iterations = k, method = "Buckley-James")
+      mu = lp, risk = exp(-lp), iterations = k, method = "Buckley-James")
   class(object) = 'deepAFT'
   return(object)
 }
@@ -108,28 +106,27 @@ deepAFT.ipcw = function(x, y, model, control, ...){
   time = y[, 1]
   status = y[, 2]
   #n = length(status)
-  #max.t = max(time)
   
   # fit km curve for censoring, set surv to small number if last obs fails.
-  G_fit = survfit(Surv(time, 1-status)~1)
-  G_fit$surv = ifelse(G_fit$surv > 0, G_fit$surv, 1e-5)
-  G = status/.appxf(G_fit$surv, x=G_fit$time, xout = time)
+  Gfit = survfit(Surv(time, 1-status)~1)
+  St = Gfit$surv
+  smin = min(St[St>0])
+  St = ifelse(St > 0, St, smin)
+  G = status/.appxf(St, x=Gfit$time, xout = time)
   
   lgt = log(time)
   mean.ipt = mean(lgt)
   lgt = lgt-mean.ipt
   
   history = model%>%fit(x, lgt,
-                        epochs = epochs, batch_size = batch.n, sample_weight = G,
-                        validation_split = v_split, verbose = verbose)
+              epochs = epochs, batch_size = batch.n, sample_weight = G,
+              validation_split = v_split, verbose = verbose)
   
   #linear predictors
   lp = (model%>%predict(x)+mean.ipt)
-  pred_time = exp(lp)
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-                mu = lp, means = apply(x, 2, mean),
-                risk = exp(-lp), method = "ipcw")
+                mu = lp, risk = exp(-lp), method = "ipcw")
   class(object) = 'deepAFT'
   return(object)
 }
@@ -175,11 +172,9 @@ deepAFT.trans = function(x, y, model, control, ...){
   
   #linear predictors
   lp = (model%>%predict(x)+mean.ipt)
-  pred_time = exp(lp)
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-                mu = lp, means = apply(x, 2, mean),
-                risk = exp(-lp), method = "transform")
+                mu = lp, risk = exp(-lp), method = "transform")
   class(object) = 'deepAFT'
   return(object)
 }
@@ -203,8 +198,9 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
     plot(log.time, resid, xlab = 'Log survival time', ylab = 'Residuals of linear predictors')
     abline(0, 0, lty = 2)
   } else if(type == 'baselineKM') {
-    plot(x$sfit)
-    title('Baseline KM curve for X = mean(X)')
+    sfit = survfit(x)
+    plot(sfit)
+    title('Baseline KM curve for T0 at X = 0')
   }
 }
 
@@ -212,7 +208,7 @@ print.deepAFT = function(x, ...) {
   cat("Deep AFT model with ", x$method, 'method\n\n')
   risk = as.vector(x$risk)
   y = x$y
-  location = (1/as.vector(risk))
+  location = 1/risk
   cat("Summary of predict location score exp(mu):\n")
   print(summary(location))
   
@@ -223,7 +219,6 @@ print.deepAFT = function(x, ...) {
   
   cindex = survConcordance(y~risk)
   cat("Concordance index: ", cindex$concordance, "\n")
-  #print(cindex)
 }
 
 #### impute KM for AFT
