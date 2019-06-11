@@ -3,6 +3,7 @@
 \alias{deepAFT.default}
 \alias{deepAFT.formula}
 \alias{deepAFT.ipcw}
+\alias{deepAFT.trans}
 \alias{deepAFTcontrol}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -38,7 +39,7 @@ deepAFT(x, ...)
           'ipcw' for inverse probability censoring weights method.
           'transform' for transformation based on book of Fan and Gijbels (1996, page 168)}
   \item{control}{a list of control values, in the format produced by
-          'deepAFTcontrol'. The default value i'deepAFTcontrol()'}
+          'deepAFTcontrol'. The default value 'deepAFTcontrol()'}
   \item{\dots}{optional arguments}
 %%  \item{epochs}{}
 %%  \item{batch_size}{}
@@ -95,7 +96,7 @@ Chen, B. E. and Norman P.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link{print.deepAFT}}, \code{\link{survreg}}, \code{\link{ibs}}
+\code{\link{print.deepAFT}}, \code{\link{survreg}}, \code{\link{ibs.deepAFT}}
 }
 \examples{
 ## Example for deep learning model

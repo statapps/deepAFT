@@ -170,7 +170,7 @@ deepAFT.trans = function(x, y, model, control, ...){
   lgt = lgt-mean.ipt
   
   history = model%>%fit(x, lgt,
-                        epochs = epochs, batch_size = batch.n, sample_weight = G,
+                        epochs = epochs, batch_size = batch.n,
                         validation_split = v_split, verbose = verbose)
   
   #linear predictors

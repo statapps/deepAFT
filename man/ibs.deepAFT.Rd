@@ -1,4 +1,5 @@
 \name{ibs}
+\alias{ibs}
 \alias{ibs.deepAFT}
 \alias{ibs.default}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -9,7 +10,8 @@ Calcuate integrated Brier Score for deepAFT
 The function ibs is used to calcualte integrated Brier Score for deepAFT.
 }
 \usage{
-ibs(x, ...)
+ibs(object, ...)
+\method{ibs}{default}(object, ...)
 \method{ibs}{deepAFT}(object, newdata=NULL, newy = NULL, ...)
 
 }
