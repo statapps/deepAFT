@@ -17,7 +17,8 @@ the most common cases use a log transformation, leading to accelerated failure t
 \usage{
 deepAFT(x, ...)
 
-\method{deepAFT}{formula}(formula, model, data, control = list(...), method = c("BuckleyJames", "ipcw", "transform"), ...)
+\method{deepAFT}{formula}(formula, model, data, control = list(...), 
+              method = c("BuckleyJames", "ipcw", "transform"), ...)
 
 \method{deepAFT}{default}(x, y, model, control, ...)
 
@@ -34,7 +35,8 @@ deepAFT(x, ...)
   \item{x}{Covariates for AFT model}
   \item{y}{Surv object for AFT model}
   \item{method}{methods to handl censoring data in deep AFT model fit, 'BuckleyJames' for Buckley and James method, 
-          'ipcw' for inverse probability censoring weights method.}
+          'ipcw' for inverse probability censoring weights method.
+          'transform' for transformation based on book of Fan and Gijbels (1996, page 168)}
   \item{control}{a list of control values, in the format produced by
           'deepAFTcontrol'. The default value i'deepAFTcontrol()'}
   \item{\dots}{optional arguments}

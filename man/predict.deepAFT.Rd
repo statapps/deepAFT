@@ -13,10 +13,10 @@ Compute predicted values for a deepAFT object
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{the results of a model fit using the deepAFT function}
-  \item{newdata}{optional new data at which to do predictions. If absent, predictions are for the dataframe used in the original fit}
-  \item{newy}{optional new outcome variable y}
-  \item{\dots}{other options used in predict()}
+  \item{object}{the results of a model fit using the deepAFT function.}
+  \item{newdata}{optional new data at which to do predictions. If absent, predictions are for the dataframe used in the original fit.}
+  \item{newy}{optional new outcome variable y.}
+  \item{\dots}{other options used in predict().}
 }
 \details{
   predict.deepAFT is called to predict object from the deepAFT model \code{\link{deepAFT}}.
