@@ -8,7 +8,7 @@ Calculates martingle, deviance or Cox-Snell residuals for a previously fitted (d
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{residuals}{deepAFT}(object, type = c("martingale", "deviance", "CoxSnell"), ...)
+\method{residuals}{deepAFT}(object, type = c("martingale", "deviance", "coxSnell"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

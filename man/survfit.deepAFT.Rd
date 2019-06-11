@@ -8,13 +8,14 @@ Computes the predicted survival function of a previously fitted (deepAFT) model.
 }
 \usage{
 ## S3 method for class 'deepAFT'
-\method{survfit}{deepAFT}(object, se.fit=TRUE, conf.int=.95)
+\method{survfit}{deepAFT}(formula, se.fit=TRUE, conf.int=.95, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{the results of a (deepAFT) fit.}
+  \item{formula}{a (deepAFT) fit object.}
   \item{se.fit}{a logical value indicating whether standard errors shall be computed. Default is TRUE}
   \item{conf.int}{the level for a two-sided confidence interval on the survival curve. Default is 0.95}
+  \item{\dots}{other unused arguments.}
 }
 \details{
   survfit.deepAFT is called to compuate baseline survival function S_T0(t) from the deepAFT model \code{\link{deepAFT}}, where T0 = T/exp(mu), or log(T) = log(T) - mu.

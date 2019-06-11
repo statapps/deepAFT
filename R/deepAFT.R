@@ -2,7 +2,7 @@
 deepAFT = function(x, ...) UseMethod("deepAFT")
 
 deepAFT.formula = function(formula, model, data, control = list(...), 
-        method = c("BuckleyJames", "ipcw", "transform")) {
+        method = c("BuckleyJames", "ipcw", "transform"), ...) {
   if (missing(data)) 
     data = environment(formula)
 
@@ -33,7 +33,7 @@ deepAFT.formula = function(formula, model, data, control = list(...),
   return(fit)
 }
 
-deepAFT.default = function(x, y, model, control) {
+deepAFT.default = function(x, y, model, control, ...) {
   epochs = control$epochs
   batch.n = control$batch.n
   v_split = control$v_split
@@ -97,7 +97,7 @@ deepAFT.default = function(x, y, model, control) {
   return(object)
 }
 
-deepAFT.ipcw = function(x, y, model, control){
+deepAFT.ipcw = function(x, y, model, control, ...){
 ## epochs = 30, batch_size = 32, validation_split = 0.1, verbose = 1) {
   epochs = control$epochs
   batch.n = control$batch.n

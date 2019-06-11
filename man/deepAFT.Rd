@@ -17,11 +17,11 @@ the most common cases use a log transformation, leading to accelerated failure t
 \usage{
 deepAFT(x, ...)
 
-\method{deepAFT}{formula}(formula, model, data, control = list(...), method = c("BuckleyJames", "ipcw", "transform"))
+\method{deepAFT}{formula}(formula, model, data, control = list(...), method = c("BuckleyJames", "ipcw", "transform"), ...)
 
-\method{deepAFT}{default}(x, y, model, control)
+\method{deepAFT}{default}(x, y, model, control, ...)
 
-\method{deepAFT}{ipcw}(x, y, model, control)
+\method{deepAFT}{ipcw}(x, y, model, control, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
