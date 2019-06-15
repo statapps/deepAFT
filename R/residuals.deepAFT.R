@@ -21,6 +21,7 @@ residuals.deepAFT = function(object, type=c("martingale", "deviance", "coxSnell"
 
   # fit survival function at time Ti
   St = .appxf(sfit$surv, x=sfit$time, xout = time)
+
   # Cox-Snell residual H(T)
   Ht = -log(St)
   

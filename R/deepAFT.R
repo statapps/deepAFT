@@ -45,6 +45,7 @@ deepAFT.default = function(x, y, model, control, ...) {
   status = y[, 2]
   n = length(status)
   max.t = max(time)
+  if(is.null(epsilon)) epsilon = max(max.t/100, 0.01)
   id = 1:n
   dat = data.frame(cbind(id = id, time = time, status = status))
   ep = 1
@@ -62,7 +63,7 @@ deepAFT.default = function(x, y, model, control, ...) {
       validation_split = v_split, verbose = verbose)
 
     ep0 = ep
-    #linear predictors
+    #predictors
     lp = (model%>%predict(x)+mean.ipt)
     ep = exp(lp)
 
@@ -90,14 +91,13 @@ deepAFT.default = function(x, y, model, control, ...) {
   else cat('Algorithm converges after ', k, 'iterations!\n')
   
   ### create outputs
-  object = list(X = x, y = Surv(time, status), model = model, mean.ipt = mean.ipt, 
-      mu = lp, risk = exp(-lp), iterations = k, method = "Buckley-James")
+  object = list(x = x, y = y, status), model = model, mean.ipt = mean.ipt, 
+      predictors = lp, risk = exp(-lp), iter = k, method = "Buckley-James")
   class(object) = 'deepAFT'
   return(object)
 }
 
 deepAFT.ipcw = function(x, y, model, control, ...){
-## epochs = 30, batch_size = 32, validation_split = 0.1, verbose = 1) {
   epochs = control$epochs
   batch.n = control$batch.n
   v_split = control$v_split
@@ -122,17 +122,16 @@ deepAFT.ipcw = function(x, y, model, control, ...){
               epochs = epochs, batch_size = batch.n, sample_weight = G,
               validation_split = v_split, verbose = verbose)
   
-  #linear predictors
+  #predictors
   lp = (model%>%predict(x)+mean.ipt)
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-                mu = lp, risk = exp(-lp), method = "ipcw")
+                predictors = lp, risk = exp(-lp), method = "ipcw")
   class(object) = 'deepAFT'
   return(object)
 }
 
 deepAFT.trans = function(x, y, model, control, ...){
-  ## epochs = 30, batch_size = 32, validation_split = 0.1, verbose = 1) {
   epochs = control$epochs
   batch.n = control$batch.n
   v_split = control$v_split
@@ -170,17 +169,17 @@ deepAFT.trans = function(x, y, model, control, ...){
                         epochs = epochs, batch_size = batch.n,
                         validation_split = v_split, verbose = verbose)
   
-  #linear predictors
+  #predictors
   lp = (model%>%predict(x)+mean.ipt)
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
-                mu = lp, risk = exp(-lp), method = "transform")
+                predictors = lp, risk = exp(-lp), method = "transform")
   class(object) = 'deepAFT'
   return(object)
 }
 
-deepAFTcontrol = function(epochs = 30, batch.n = 32,
-  v_split = 0.1, verbose = 0, epsilon = 0.01, max.iter = 50) {
+deepAFTcontrol = function(epochs = 30, batch.n = 64,
+  v_split = 0.1, verbose = 0, epsilon = NULL, max.iter = 50) {
   
   list(epochs = epochs, batch.n = batch.n, v_split = v_split, verbose = verbose, epsilon = epsilon, max.iter = max.iter)
 }
@@ -190,7 +189,7 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
   time = x$y[, 1]
   log.time  = log(time)
   if (type == 'predicted') {
-    predicted = x$mu
+    predicted = x$predictors
     plot(log.time, predicted, xlab = 'Log survival time', ylab = 'Predicted log survival time')
     abline(0, 1, lty = 2)
   } else if(type == 'residuals') {

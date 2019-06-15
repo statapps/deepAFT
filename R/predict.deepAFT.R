@@ -3,27 +3,27 @@
 
 predict.deepAFT = function(object, newdata, newy = NULL, ...) {
   sfit = survfit(object)
-  lp   = object$mu
+  lp   = object$predict
   risk = object$risk
   if(missing(newdata)) {
-    X = object$X
-    #residuals = sfit$residuals
-    residuals = NULL
+    x = object$x
+    #martingale residual
+    residuals = residuals(object, type = 'm')
   }
   else {
     ### if there is new data
     model = object$model
-    X = newdata
+    x = newdata
     residuals = NULL
 
-    lp  = (model%>%predict(X) + object$mean.ipt)
+    lp  = (model%>%predict(x) + object$mean.ipt)
     risk = exp(-lp)
   }
-  result = list(lp = lp, risk = risk, time = object$time, sfit = sfit)
+  result = list(predictor = lp, risk = risk, time = object$time, sfit = sfit)
 
   if(!is.null(newy)) {
     if(missing(newdata)) stop("Error: newdata cannot missing when there is new y.")
-    if(length(newy[, 1]) != length(X[, 1]))
+    if(length(newy[, 1]) != length(x[, 1]))
       stop("Error: new y shall have the same subjects as the new data.")
 
     ## sort survival time for new y from smallest to largest
