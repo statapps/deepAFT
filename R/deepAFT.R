@@ -91,7 +91,7 @@ deepAFT.default = function(x, y, model, control, ...) {
   else cat('Algorithm converges after ', k, 'iterations!\n')
   
   ### create outputs
-  object = list(x = x, y = y, status), model = model, mean.ipt = mean.ipt, 
+  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
       predictors = lp, risk = exp(-lp), iter = k, method = "Buckley-James")
   class(object) = 'deepAFT'
   return(object)
@@ -204,20 +204,34 @@ plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...
 }
 
 print.deepAFT = function(x, ...) {
+  object = summary(x)
+  print(object)
+}
+print.summary.deepAFT = function(x, ...) {
   cat("Deep AFT model with ", x$method, 'method\n\n')
-  risk = as.vector(x$risk)
-  y = x$y
-  location = 1/risk
   cat("Summary of predict location score exp(mu):\n")
-  print(summary(location))
+  print(summary(x$location))
   
-  cat("\n\nDistribution of T0 = T/exp(mu):\n")
+  cat("\nDistribution of T0 = T/exp(mu):\n")
+  print(x$sfit)
   
-  sfit = survfit(x)
-  print(sfit)
-  
+  cat("\nSummary of martingle residuals:\n")
+  print(summary(x$resid, digits = 3))
+
+  concord = round(x$cindex$concordance*10000)/10000
+  cat("Concordance index: ", concord, "\n")
+}
+
+summary.deepAFT = function(object, ...) {
+  risk = as.vector(object$risk)
+  y = object$y
+  location = 1/risk
+  sfit = survfit(object)
   cindex = survConcordance(y~risk)
-  cat("Concordance index: ", cindex$concordance, "\n")
+  resid = residuals(object, type = 'm')
+  temp = list(location = location, sfit = sfit, cindex = cindex, resid = resid)
+  class(temp) = "summary.deepAFT"
+  return(temp)
 }
 
 #### impute KM for AFT
