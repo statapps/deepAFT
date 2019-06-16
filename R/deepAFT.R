@@ -45,7 +45,7 @@ deepAFT.default = function(x, y, model, control, ...) {
   status = y[, 2]
   n = length(status)
   max.t = max(time)
-  if(is.null(epsilon)) epsilon = max(max.t/100, 0.01)
+  if(is.null(epsilon)) epsilon = 0.01
   id = 1:n
   dat = data.frame(cbind(id = id, time = time, status = status))
   ep = 1
@@ -60,7 +60,7 @@ deepAFT.default = function(x, y, model, control, ...) {
     lgt = log(ipt) - mean.ipt
     
     history = model%>%fit(x, lgt, epochs = epochs, batch_size = batch.n,
-      validation_split = v_split, verbose = verbose)
+                validation_split = v_split, verbose = verbose)
 
     ep0 = ep
     #predictors
@@ -71,7 +71,8 @@ deepAFT.default = function(x, y, model, control, ...) {
     et = dat$time/ep
     ### restrict rescaled time to be less than max.t
     et = ifelse(et < max.t, et, max.t)
-    dati = data.frame(cbind(id = id, time = et, status = dat$status))
+    #dati = data.frame(cbind(id = id, time = et, status = status))
+    dati = data.frame(cbind(id, et, status))
     colnames(dati) = c("id", "time", "status")
     ipt = .imputeKM(dati)*ep
     ### restrict imputed time to be less than max.t
@@ -80,7 +81,7 @@ deepAFT.default = function(x, y, model, control, ...) {
     cat('MSE = ', mean(resid^2))
 
     #check convergence
-    dif.ep = mean(abs(ep-ep0))
+    dif.ep = mean(abs(ep-ep0))/max.t
     cat(",  epsilon = ", dif.ep, "\n")
     if(dif.ep < epsilon) {
       convergence = TRUE
@@ -98,7 +99,7 @@ deepAFT.default = function(x, y, model, control, ...) {
 }
 
 deepAFT.ipcw = function(x, y, model, control, ...){
-  epochs = control$epochs
+  epochs  = control$epochs
   batch.n = control$batch.n
   v_split = control$v_split
   verbose = control$verbose
@@ -139,8 +140,6 @@ deepAFT.trans = function(x, y, model, control, ...){
   
   time = y[, 1]
   status = y[, 2]
-  #n = length(status)
-  #max.t = max(time)
   
   # fit km curve for censoring, set surv to small number if last obs fails.
   # transformation based on book of Fan J (1996, page 168)
@@ -166,8 +165,8 @@ deepAFT.trans = function(x, y, model, control, ...){
   lgt = lgt-mean.ipt
   
   history = model%>%fit(x, lgt,
-                        epochs = epochs, batch_size = batch.n,
-                        validation_split = v_split, verbose = verbose)
+                 epochs = epochs, batch_size = batch.n,
+                 validation_split = v_split, verbose = verbose)
   
   #predictors
   lp = (model%>%predict(x)+mean.ipt)
@@ -207,6 +206,7 @@ print.deepAFT = function(x, ...) {
   object = summary(x)
   print(object)
 }
+
 print.summary.deepAFT = function(x, ...) {
   cat("Deep AFT model with ", x$method, 'method\n\n')
   cat("Summary of predict location score exp(mu):\n")
@@ -229,7 +229,7 @@ summary.deepAFT = function(object, ...) {
   sfit = survfit(object)
   cindex = survConcordance(y~risk)
   resid = residuals(object, type = 'm')
-  temp = list(location = location, sfit = sfit, cindex = cindex, resid = resid)
+  temp = list(location = location, sfit = sfit, cindex = cindex, resid = resid, method = object$method)
   class(temp) = "summary.deepAFT"
   return(temp)
 }
