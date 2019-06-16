@@ -208,28 +208,29 @@ print.deepAFT = function(x, ...) {
 }
 
 print.summary.deepAFT = function(x, ...) {
-  cat("Deep AFT model with ", x$method, 'method\n\n')
-  cat("Summary of predict location score exp(mu):\n")
-  print(summary(x$location))
-  
+  cat("Deep AFT model with", x$method, 'method\n\n')
+  cat("Summary of predicted values of mu, location exp(mu) and martingale residuals:\n")
+  out = data.frame(cbind(predictors = x$predictors, locations = x$locations))
+  colnames(out) = c('predictors', 'locations')
+  if(!is.null(x$residuals)) out$residuals = x$residuals
+
+  print(t(apply(out, 2, summary)), digits = 3)
+  cat("for n = ", length(out[, 1]), 'observation(s).\n')
+
   cat("\nDistribution of T0 = T/exp(mu):\n")
   print(x$sfit)
   
-  cat("\nSummary of martingle residuals:\n")
-  print(summary(x$resid, digits = 3))
-
-  concord = round(x$cindex$concordance*10000)/10000
-  cat("Concordance index: ", concord, "\n")
+  if(!is.null(x$cindex))cat("Concordance index:", round(x$cindex$concordance*10000)/10000, "\n")
 }
 
 summary.deepAFT = function(object, ...) {
   risk = as.vector(object$risk)
   y = object$y
-  location = 1/risk
+  locations = 1/risk
   sfit = survfit(object)
   cindex = survConcordance(y~risk)
   resid = residuals(object, type = 'm')
-  temp = list(location = location, sfit = sfit, cindex = cindex, resid = resid, method = object$method)
+  temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, residuals = resid, method = object$method)
   class(temp) = "summary.deepAFT"
   return(temp)
 }

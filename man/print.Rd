@@ -25,6 +25,19 @@ print is used to provide a short summary of outputs from "deepAFT".
 baseline survival function for T0=T/exp(mu), and martingale residules for the fitted model.
   The default method, print.default has its own help page. Use methods("print") to get all the methods for the print generic.
 }
+
+\value{
+  %%  ~Describe the value returned
+  An object of class "summary.deepAFT" is returned. The object contains the following list components:
+
+ %%  If it is a LIST, use
+   \item{location}{location parameter exp(mu), to predice the mean value of survival time.}
+   \item{sfit}{survfit object of the baselie survival function of T0=T/exp(mu).}
+   \item{cindex}{Concordance index of the fitted deepAFT model.}
+   \item{resid}{martingle residuals of the fitted deepAFT model.}
+   \item{method}{the model used to fit the deepAFT model.}
+}
+
 \author{Bingshu E. Chen}
 \seealso{
  The default method for print \code{\link{print.default}}. Other methods include

@@ -2,35 +2,31 @@
 .appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
 
 predict.deepAFT = function(object, newdata, newy = NULL, ...) {
-  sfit = survfit(object)
-  lp   = object$predict
-  risk = object$risk
+  result = summary(object)
+  sfit = result$sfit
   if(missing(newdata)) {
-    x = object$x
-    #martingale residual
-    residuals = residuals(object, type = 'm')
+    return(result)
   }
   else {
     ### if there is new data
-    model = object$model
+    m = object$model
     x = newdata
-    residuals = NULL
+    ### if x is a numeric vector, change it to matrix
+    if(is.null(dim(x))) x = t(as.matrix(x))
 
-    lp  = (model%>%predict(x) + object$mean.ipt)
+    lp  = (m%>%predict(x) + object$mean.ipt)
     risk = exp(-lp)
+    result$predictors = lp
+    result$risk = risk
+    result$locations = 1/risk
+    result$cindex = NULL
+    result$residuals = NULL
   }
-  result = list(predictor = lp, risk = risk, time = object$time, sfit = sfit)
 
   if(!is.null(newy)) {
     if(missing(newdata)) stop("Error: newdata cannot missing when there is new y.")
     if(length(newy[, 1]) != length(x[, 1]))
       stop("Error: new y shall have the same subjects as the new data.")
-
-    ## sort survival time for new y from smallest to largest
-    idx = order(newy[, 1])
-    lp  = lp[idx]
-    risk = risk[idx]
-    newy = newy[idx, ]
 
     time   = newy[, 1]  #time
     status = newy[, 2]  #status
@@ -40,16 +36,9 @@ predict.deepAFT = function(object, newdata, newy = NULL, ...) {
     sf = .appxf(sfit$surv, x=sfit$time, xout=aft.time)
     sf = ifelse(sf>0, sf, min(sf[sf>0]))
     cumhaz = -log(sf)
-    residuals = (status - cumhaz)
-
-    ## update lp, riks, time and cumhaz, all ordered by time
-    result$lp = lp
-    result$risk = risk
-    result$time = time
-    result$status = status
-    result$surv = sf
+    result$residuals = (status - cumhaz)
+    result$cindex = survConcordance(newy~risk)
+    class(result) = "summary.deepAFT"
   }
-  result$residuals = residuals
-
   return(result)
 }
