@@ -132,6 +132,28 @@ deepAFT.ipcw = function(x, y, model, control, ...){
   return(object)
 }
 
+# fit km curve for censoring, set surv to small number if last obs fails.
+# transformation based on book of Fan J (1996, page 168)
+.Gfit = function(time, status) {
+  Gfit = survfit(Surv(time, 1-status)~1)
+  St = Gfit$surv
+  tm = Gfit$time
+  St = ifelse(St > 0, St, 1e-5)
+  Gt = 1/.appxf(St, x=tm, xout = time)
+
+  # Integrate from 0 to t of 1/G(u)
+  dt = diff(c(0, tm))
+  iG = cumsum(1/St*dt)
+  iGt = .appxf(iG, x=tm, xout = time)
+
+  a = min(((iGt - time)/(time*Gt-iGt))[status==1], na.rm=TRUE)
+  phi2 = (1+a)*iGt
+  phi1 = phi2 - a*time*Gt
+
+  tx = ifelse(status>0, phi1, phi2)
+  return(tx)
+}
+
 deepAFT.trans = function(x, y, model, control, ...){
   epochs = control$epochs
   batch.n = control$batch.n
@@ -141,35 +163,25 @@ deepAFT.trans = function(x, y, model, control, ...){
   time = y[, 1]
   status = y[, 2]
   
-  # fit km curve for censoring, set surv to small number if last obs fails.
-  # transformation based on book of Fan J (1996, page 168)
-  Gfit = survfit(Surv(time, 1-status)~1)
-  St = Gfit$surv
-  tm = Gfit$time
-  St = ifelse(St> 0, St, 1e-5)
-  Gt = 1/.appxf(St, x=tm, xout = time)
+  mu = mean(time)
+  #mu = 1
+  for(i in 1:10){
+  tx = time/mu
+  tx2 = .Gfit(tx, status)*mu
   
-  # Integrate from 0 to t of 1/G(u)
-  dt = diff(c(0, tm))
-  iG = cumsum(1/St*dt)
-  iGt = .appxf(iG, x=tm, xout = time)
-
-  a = min(((iGt - time)/(time*Gt-iGt))[status==1], na.rm=TRUE)
-  phi2 = (1+a)*iGt
-  phi1 = phi2 - a*time*Gt
-  
-  time2 = ifelse(status>0, phi1, phi2)
-  
-  lgt = log(time2)
+  lgt = log(tx2)
   mean.ipt = mean(lgt)
   lgt = lgt-mean.ipt
   
   history = model%>%fit(x, lgt,
-                 epochs = epochs, batch_size = batch.n,
-                 validation_split = v_split, verbose = verbose)
+               epochs = epochs, batch_size = batch.n,
+               validation_split = v_split, verbose = verbose)
   
   #predictors
+  mean.ipt = mean.ipt
   lp = (model%>%predict(x)+mean.ipt)
+  mu = exp(lp)
+  }
   ### create outputs
   object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
                 predictors = lp, risk = exp(-lp), method = "transform")
