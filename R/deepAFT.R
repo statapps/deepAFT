@@ -232,7 +232,7 @@ print.summary.deepAFT = function(x, ...) {
   cat("\nDistribution of T0 = T/exp(mu):\n")
   print(x$sfit)
   
-  if(!is.null(x$cindex))cat("Concordance index:", round(x$cindex$concordance*10000)/10000, "\n")
+  if(!is.null(x$cindex))cat("Concordance index:", round(x$c.index*10000)/10000, "\n")
 }
 
 summary.deepAFT = function(object, ...) {
@@ -240,9 +240,13 @@ summary.deepAFT = function(object, ...) {
   y = object$y
   locations = 1/risk
   sfit = survfit(object)
-  cindex = survConcordance(y~risk)
+  if(exists("survConcordance")) 
+    cindex = survConcordance(y~risk)
+  else 
+    cindex = concordance(y~risk)
+
   resid = residuals(object, type = 'm')
-  temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, residuals = resid, method = object$method)
+  temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
   class(temp) = "summary.deepAFT"
   return(temp)
 }
