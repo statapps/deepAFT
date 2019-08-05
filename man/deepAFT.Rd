@@ -76,6 +76,7 @@ The following parameters in 'deepAFTcontrol' will be used to control the model f
 
 'max.iter': number of maximum iteration, default is max.iter = 30.
 
+'censor.groups': a vector for censoring groups. A KM curve for censoring will be fit for each group. If a matrix is privided, the a Cox model will be used to predict the censoring probability.
 }
 \value{
 %%  ~Describe the value returned

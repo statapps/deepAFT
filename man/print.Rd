@@ -11,13 +11,14 @@ print is used to provide a short summary of outputs from "deepAFT".
 }
 \usage{
 \method{print}{deepAFT}(x, ...)
-\method{print}{summary}{deepAFT}(x, ...)
+\method{print}{summary.deepAFT}(x, ...)
 \method{summary}{deepAFT}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a class returned from deepAFT model fit}
   \item{\dots}{other options used in print()}
+  \item{object}{a class of deepAFT object}
 }
 \details{
   print.deepAFT is called to print object or summary of object from the deep learning AFT models \code{\link{deepAFT}}.  

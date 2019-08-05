@@ -103,18 +103,18 @@ deepAFT.ipcw = function(x, y, model, control, ...){
   batch.n = control$batch.n
   v_split = control$v_split
   verbose = control$verbose
+  cGroup  = control$cGroup
   
   time = y[, 1]
   status = y[, 2]
   #n = length(status)
   
-  # fit km curve for censoring, set surv to small number if last obs fails.
-  Gfit = survfit(Surv(time, 1-status)~1)
-  St = Gfit$surv
-  smin = min(St[St>0])
-  St = ifelse(St > 0, St, smin)
-  G = status/.appxf(St, x=Gfit$time, xout = time)
-  
+  # fit a KM curve for censoring.
+  #Gfit = survfit(Surv(time, 1-status)~1)
+  #St = Gfit$surv
+  #G = status/.appxf(St, x=Gfit$time, xout = time)
+  G = status/.ipcw(time, status, cGroup)
+
   lgt = log(time)
   mean.ipt = mean(lgt)
   lgt = lgt-mean.ipt
@@ -134,7 +134,7 @@ deepAFT.ipcw = function(x, y, model, control, ...){
 
 # fit km curve for censoring, set surv to small number if last obs fails.
 # transformation based on book of Fan J (1996, page 168)
-.Gfit = function(time, status) {
+.Gfit = function(time, status, cGroup = NULL) {
   Gfit = survfit(Surv(time, 1-status)~1)
   St = Gfit$surv
   tm = Gfit$time
@@ -189,10 +189,11 @@ deepAFT.trans = function(x, y, model, control, ...){
   return(object)
 }
 
-deepAFTcontrol = function(epochs = 30, batch.n = 64,
-  v_split = 0.1, verbose = 0, epsilon = NULL, max.iter = 50) {
+deepAFTcontrol = function(epochs = 30, batch.n = 64, v_split = 0.1, verbose = 0, 
+	epsilon = NULL, max.iter = 50, censor.group = NULL) {
   
-  list(epochs = epochs, batch.n = batch.n, v_split = v_split, verbose = verbose, epsilon = epsilon, max.iter = max.iter)
+  list(epochs = epochs, batch.n = batch.n, v_split = v_split, verbose = verbose, 
+       epsilon = epsilon, max.iter = max.iter, cGroup = censor.group)
 }
 
 plot.deepAFT = function(x, type = c('predicted', 'residuals', 'baselineKM'), ...) {
@@ -245,7 +246,7 @@ summary.deepAFT = function(object, ...) {
   else 
     cindex = concordance(y~risk)
 
-  resid = residuals(object, type = 'm')
+  resid = residuals.deepAFT(object, type = 'm')
   temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
   class(temp) = "summary.deepAFT"
   return(temp)
