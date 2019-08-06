@@ -2,7 +2,7 @@ Package: deepAFT
 Type: Package
 Title: Deep learning for AFT model in survival
 Version: 0.1.0
-Date: 2019-06-09
+Date: 2019-07-29
 Depends: R (>= 3.2.0), keras, survival, tensorflow
 Imports: methods
 Author: Bingshu E. Chen and Patrick Norman

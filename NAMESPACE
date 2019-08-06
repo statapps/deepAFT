@@ -11,12 +11,18 @@ importFrom("stats", "approx", "model.frame", "model.matrix", "model.response",
 
 #importFrom("keras", "predict")
 
+S3method(ibs, default)
+S3method(ibs, deepAFT)
 S3method(deepAFT, default)
-S3method(deepAFT,  formula)
+S3method(deepAFT, formula)
+S3method(deepAFT, ipcw)
+S3method(deepAFT, trans)
 
 S3method(plot, deepAFT)
 S3method(predict, deepAFT)
 S3method(print, deepAFT)
+S3method(print, summary.deepAFT)
 S3method(residuals, deepAFT)
+S3method(summary, deepAFT)
 S3method(survfit, deepAFT)
 
