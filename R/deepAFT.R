@@ -287,3 +287,8 @@ summary.deepAFT = function(object, ...) {
   }
   return(ipt)
 }
+
+#standardize X
+stndx = function(a) {return((a - mean(a))/sd(a))}
+#x = apply(x, 2, .stndx)
+
