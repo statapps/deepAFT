@@ -5,6 +5,7 @@
 \alias{deepAFT.ipcw}
 \alias{deepAFT.trans}
 \alias{deepAFTcontrol}
+\alias{stndx}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Deep learning for accelerated failure time data
@@ -77,6 +78,8 @@ The following parameters in 'deepAFTcontrol' will be used to control the model f
 'max.iter': number of maximum iteration, default is max.iter = 30.
 
 'censor.groups': a vector for censoring groups. A KM curve for censoring will be fit for each group. If a matrix is privided, the a Cox model will be used to predict the censoring probability.
+
+When the variance for covariance matrix X is too large, please use xbar = apply(x, 2, stndx) to standardize X.
 }
 \value{
 %%  ~Describe the value returned

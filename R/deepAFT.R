@@ -12,6 +12,10 @@ deepAFT.formula = function(formula, model, data, control = list(...),
   x = model.matrix(attr(mf, "terms"), data = mf)
   ### remove intercept term
   x = x[, -1]
+  
+  sdx = apply(x, 2, sd)
+  if(max(sdx)>10) warning("Variance of X is too large, please try xbar = apply(x, 2, stndx) ")
+  
   y = model.response(mf)
   if (!inherits(y, "Surv")) 
     stop("Response must be a survival object")
@@ -241,10 +245,10 @@ summary.deepAFT = function(object, ...) {
   y = object$y
   locations = 1/risk
   sfit = survfit(object)
-  if(exists("survConcordance")) 
-    cindex = survConcordance(y~risk)
-  else 
-    cindex = concordance(y~risk)
+  #if(exists("survConcordance")) 
+  #  cindex = survConcordance(y~risk)
+  #else 
+  cindex = concordance(y~risk)
 
   resid = residuals.deepAFT(object, type = 'm')
   temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
@@ -290,5 +294,5 @@ summary.deepAFT = function(object, ...) {
 
 #standardize X
 stndx = function(a) {return((a - mean(a))/sd(a))}
-#x = apply(x, 2, .stndx)
+#x = apply(x, 2, stndx)
 
