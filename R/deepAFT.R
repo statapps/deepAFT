@@ -245,7 +245,7 @@ summary.deepAFT = function(object, ...) {
   y = object$y
   locations = 1/risk
   sfit = survfit(object)
-  cindex = concordance(y~location)
+  cindex = concordance(y~locations)
 
   resid = residuals.deepAFT(object, type = 'm')
   temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
