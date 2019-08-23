@@ -130,7 +130,7 @@ deepAFT.ipcw = function(x, y, model, control, ...){
   #predictors
   lp = (model%>%predict(x)+mean.ipt)
   ### create outputs
-  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
+  object = list(x = x, y = y, model = model, history = history, mean.ipt = mean.ipt, 
                 predictors = lp, risk = exp(-lp), method = "ipcw")
   class(object) = 'deepAFT'
   return(object)
