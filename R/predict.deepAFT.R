@@ -40,7 +40,7 @@ predict.deepAFT = function(object, newdata, newy = NULL, ...) {
     result$residuals = (status - cumhaz)
     
     cindex = try(concordance(newy~lp))
-    if(class(cindex)=="try-error") then cindex = NULL
+    if(class(cindex)=="try-error") cindex = NULL
     else {
       result$cindex = cindex
       result$c.index= cindex$concordance
