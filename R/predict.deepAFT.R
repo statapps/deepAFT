@@ -39,9 +39,12 @@ predict.deepAFT = function(object, newdata, newy = NULL, ...) {
     cumhaz = -log(sf)
     result$residuals = (status - cumhaz)
     
-    cindex = concordance(newy~lp)
-    result$cindex = cindex
-    result$c.index= cindex$concordance
+    cindex = try(concordance(newy~lp))
+    if(class(cindex)=="try-error") then cindex = NULL
+    else {
+      result$cindex = cindex
+      result$c.index= cindex$concordance
+    }
     class(result) = "summary.deepAFT"
   }
   return(result)
