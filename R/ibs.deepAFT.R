@@ -37,6 +37,7 @@ ibs.deepAFT = function(object, newdata=NULL, newy = NULL, ...) {
   # fit km curve for censoring
   G_fit = survfit(Surv(time, 1-status)~1)
   G = .appxf(G_fit$surv, x=G_fit$time, xout = time)
+  G = ifelse(G>0, G, 0.0001)
 
   G_M = matrix(G, nrow=n, ncol=n)
   G_M[lower.tri(G_M)]=0

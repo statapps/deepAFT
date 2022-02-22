@@ -40,7 +40,7 @@ predict.deepAFT = function(object, newdata, newy = NULL, ...) {
     #if(exists("survConcordance"))
     #  cindex = survConcordance(newy~risk)
     #else 
-    cindex = concordance(newy~risk)
+    cindex = concordance(newy~lp)
     result$cindex = cindex
     result$c.index= cindex$concordance
     class(result) = "summary.deepAFT"

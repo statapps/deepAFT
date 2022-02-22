@@ -82,11 +82,11 @@ deepAFT.default = function(x, y, model, control, ...) {
     ### restrict imputed time to be less than max.t
     ipt = ifelse(ipt < max.t, ipt, max.t)
     resid = (log(ipt) - lp)
-    cat('MSE = ', mean(resid^2))
+    #cat('MSE = ', mean(resid^2))
 
     #check convergence
     dif.ep = mean(abs(ep-ep0))/max.t
-    cat(",  epsilon = ", dif.ep, "\n")
+    #cat(",  epsilon = ", dif.ep, "\n")
     if(dif.ep < epsilon) {
       convergence = TRUE
       break
@@ -234,21 +234,23 @@ print.summary.deepAFT = function(x, ...) {
   print(t(apply(out, 2, summary)), digits = 3)
   cat("for n = ", length(out[, 1]), 'observation(s).\n')
 
-  cat("\nDistribution of T0 = T/exp(mu):\n")
+  cat("\nDistribution of T0 = T/exp(mu) for the training data:\n")
   print(x$sfit)
   
-  if(!is.null(x$cindex))cat("Concordance index:", round(x$c.index*10000)/10000, "\n")
+  if(!is.null(x$cindex))cat("Concordance index:", round(x$c.index*10000)/10000, "\n\n")
 }
 
 summary.deepAFT = function(object, ...) {
   risk = as.vector(object$risk)
   y = object$y
+  lp = object$predictors
   locations = 1/risk
   sfit = survfit(object)
   #if(exists("survConcordance")) 
   #  cindex = survConcordance(y~risk)
   #else 
-  cindex = concordance(y~risk)
+  #cindex = concordance(y~risk)
+  cindex = concordance(y~lp)
 
   resid = residuals.deepAFT(object, type = 'm')
   temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
