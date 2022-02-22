@@ -15,9 +15,10 @@ residuals.deepAFT = function(object, type=c("martingale", "deviance", "coxSnell"
   
   time   = object$y[, 1]*object$risk
   status = object$y[, 2]
-  n = length(status)
+  
+  m = length(sfit$surv)
   ### in case the last subject fails,  S0(t) = 0
-  sfit$surv[n] = sfit$surv[n-1]
+  sfit$surv[m] = sfit$surv[m-1]
 
   # fit survival function at time Ti
   St = .appxf(sfit$surv, x=sfit$time, xout = time)

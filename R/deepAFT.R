@@ -130,7 +130,7 @@ deepAFT.ipcw = function(x, y, model, control, ...){
   #predictors
   lp = (model%>%predict(x)+mean.ipt)
   ### create outputs
-  object = list(x = x, y = y, model = model, mean.ipt = mean.ipt, 
+  object = list(x = x, y = y, model = model, history = history, mean.ipt = mean.ipt, 
                 predictors = lp, risk = exp(-lp), method = "ipcw")
   class(object) = 'deepAFT'
   return(object)
@@ -245,6 +245,7 @@ summary.deepAFT = function(object, ...) {
   y = object$y
   lp = object$predictors
   locations = 1/risk
+  lp = object$predictors
   sfit = survfit(object)
   #if(exists("survConcordance")) 
   #  cindex = survConcordance(y~risk)
@@ -252,8 +253,10 @@ summary.deepAFT = function(object, ...) {
   #cindex = concordance(y~risk)
   cindex = concordance(y~lp)
 
+  c.index = cindex$concordance
+  
   resid = residuals.deepAFT(object, type = 'm')
-  temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = cindex$concordance, residuals = resid, method = object$method)
+  temp = list(predictors = object$predictors, locations = locations, sfit = sfit, cindex = cindex, c.index = c.index, residuals = resid, method = object$method)
   class(temp) = "summary.deepAFT"
   return(temp)
 }
