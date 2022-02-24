@@ -245,14 +245,13 @@ summary.deepAFT = function(object, ...) {
   y = object$y
   lp = object$predictors
   locations = 1/risk
-  lp = object$predictors
+  #lp = object$predictors
   sfit = survfit(object)
   #if(exists("survConcordance")) 
   #  cindex = survConcordance(y~risk)
   #else 
   #cindex = concordance(y~risk)
   cindex = concordance(y~lp)
-
   c.index = cindex$concordance
   
   resid = residuals.deepAFT(object, type = 'm')
