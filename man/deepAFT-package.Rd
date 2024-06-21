@@ -31,19 +31,23 @@ Please use the following steps to install the most recent version of 'deepAFT' p
 "deepAFT" uses deep learning methods to fir an accerelated failure time model for survival data with high dimensional  
 biomarker variables or other covariates.
 
-In the future, a stable version of the "deepAFT" package will be also available from the Comprehensive R Archive Network 
-(https://CRAN.R-project.org/package=deepAFT) and can be installed using R command 
+A stable version of the "deepAFT" is now part of an R package "dnn" available from the Comprehensive R Archive Network 
+(https://CRAN.R-project.org/package=dnn) and can be installed using R command 
 
-  install.packages("deepAFT")
+  install.packages("dnn")
+  library(dnn)
+  help("deepAFT")
 
 }
-\author{Bingshu E. Chen and Patrick Norman
+\author{Patrick Norman, Wanlux, Li, Wenyu Jiang and Bingshu E. Chen}
 
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>}
 \references{
 Buckley, J. and James, I. (1979). Linear regression with cencored data. Biometrika, 66, page 429-436.
 
-Norman, P. and Chen, B. E. (2019). DeepAFAT: A nonparametric accelerated failure time model with artifical neural network. Manuscript to be submitted. 
+Norman, P. and Chen, B. E. (2018). DeepAFAT: A nonparametric accelerated failure time model with artifical neural network. M. Sc. thesis report. Department of Public Health Sciences, Queen's University, Canada.
+
+Norman, P. Li, W., Jiang, W. and Chen, B. E. (2024). deepAFT: A nonlinear accelerated failure time model with artificial neural network. Statistics in Medicine. Published June 18, 2024.
 
 Chollet, F. and Allaire J. J. (2017). Deep learning with R. Manning.
 }

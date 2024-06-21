@@ -1,4 +1,5 @@
-# DeepAFT: AFT model with deep learning
+
+# DeepAFT: AFT model for survival data with deep learning neural networks.
 
 "deepAFT" is a R package for AFT model with deep learning.
 Please use the following steps to install 'deepAFT' package:
@@ -15,7 +16,9 @@ alled in your R. Invoke R and then type
 3. Install "deepAFT" package with R commond
 
   install_github("statapps/deepAFT")
-  
+ 
+### Update June 21, 2024
+### the following steps are not longer required.########################
 4. Install "keras" and "tensorflow" R package.
 
    install.packages("keral")
@@ -26,4 +29,3 @@ alled in your R. Invoke R and then type
 6. Install tensorFlow for your compute system (run the following code under commondline of your system (Windows, Linix, or OS X))
 
    pip install tensorflow
-   
